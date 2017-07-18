@@ -19,24 +19,26 @@ MAINTAINER "Rodrigo Martínez" <dev@brunneis.com>
 # APACHE HTTP SERVER
 ################################################
 
-ENV HTTPD_VERSION 2.4.25
+ENV HTTPD_VERSION 2.4.27
 ENV HTTPD_ARCHIVE httpd-$HTTPD_VERSION.tar.gz
 ENV HTTPD_ARCHIVE_URL https://dist.apache.org/repos/dist/release/httpd/$HTTPD_ARCHIVE
 ENV HTTPD_SHA1_URL $HTTPD_ARCHIVE_URL.sha1
 
+ENV BUILD_PACKAGES \
+    wget \
+    apr-devel \
+    apr-util-devel \
+    pcre-devel \
+    make \
+    gcc
+
 RUN \
 	yum -y update \
 	&& yum -y install \
-		wget \
 		ca-certificates \
-		apr \
-		apr-devel \
-		apr-util \
-		apr-util-devel \
-		pcre \
-		pcre-devel \
-		make \
-		gcc \
+	    apr \
+	    apr-util \
+		$BUILD_PACKAGES \
 	&& wget $HTTPD_ARCHIVE_URL \
 	&& wget $HTTPD_SHA1_URL  \
 	&& sha1sum -c $HTTPD_ARCHIVE.sha1 \
@@ -48,14 +50,16 @@ RUN \
 	&& mkdir /opt/httpd \
 	&& ./configure --prefix=/opt/httpd \
 	&& make \
-	&& make install
+	&& make install \
+	&& yum -y remove $BUILD_PACKAGES \
+	&& yum clean all
 
-# Configuration volume
-VOLUME ["/opt/httpd/conf"]
+ENV PATH /opt/httpd/bin:$PATH
 
 # Data volume
-VOLUME ["/www"]
+VOLUME ["/opt/httpd/htdocs"]
+
+EXPOSE 80
 
 COPY entrypoint.sh /
-RUN chmod u+x /entrypoint.sh
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["bash", "/entrypoint.sh"]
