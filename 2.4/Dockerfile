@@ -1,5 +1,5 @@
 # Apache HTTP Server (Vanilla) on CentOS 7.
-# Copyright (C) 2017 Rodrigo Martínez <dev@brunneis.com>
+# Copyright (C) 2017-2018 Rodrigo Martínez <dev@brunneis.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,14 +12,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM centos:7.3.1611
+FROM centos:7.4
 MAINTAINER "Rodrigo Martínez" <dev@brunneis.com>
 
 ################################################
 # APACHE HTTP SERVER
 ################################################
 
-ENV HTTPD_VERSION 2.4.27
+ENV HTTPD_VERSION 2.4.29
 ENV HTTPD_ARCHIVE httpd-$HTTPD_VERSION.tar.gz
 ENV HTTPD_ARCHIVE_URL https://dist.apache.org/repos/dist/release/httpd/$HTTPD_ARCHIVE
 ENV HTTPD_SHA1_URL $HTTPD_ARCHIVE_URL.sha1
