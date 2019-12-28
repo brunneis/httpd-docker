@@ -3,10 +3,10 @@ Docker image for Apache HTTP server on Centos 7.
 
 ## Getting the image
 ### Local build
-`docker build -t brunneis/httpd-centos .`
+`docker build -t brunneis/httpd .`
 
 ### Docker Hub
-`docker pull brunneis/httpd-centos`
+`docker pull brunneis/httpd`
 
 ## Run the container
-`docker run -id --name httpd-centos -p 80:80 -v $(pwd)/local_shared_dir:/opt/httpd/htdocs:Z brunneis/httpd-centos`
+`docker run -d -p 80:80 -v $(pwd)/data:/opt/httpd/htdocs brunneis/httpd`
