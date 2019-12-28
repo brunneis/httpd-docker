@@ -1,5 +1,5 @@
-# Apache HTTP Server (Vanilla) on CentOS 7.
-# Copyright (C) 2017-2018 Rodrigo Martínez <dev@brunneis.com>
+# Apache HTTP Server (Vanilla) on CentOS.
+# Copyright (C) 2017-2020 Rodrigo Martínez <dev@brunneis.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -12,14 +12,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM centos:7.4.1708
-MAINTAINER "Rodrigo Martínez" <dev@brunneis.com>
+FROM centos:7
+LABEL maintainer="dev@brunneis.com"
 
 ################################################
 # APACHE HTTP SERVER
 ################################################
 
-ENV HTTPD_VERSION 2.4.29
+ARG HTTPD_VERSION
 ENV HTTPD_ARCHIVE httpd-$HTTPD_VERSION.tar.gz
 ENV HTTPD_ARCHIVE_URL https://dist.apache.org/repos/dist/release/httpd/$HTTPD_ARCHIVE
 ENV HTTPD_SHA1_URL $HTTPD_ARCHIVE_URL.sha1
@@ -46,7 +46,7 @@ RUN \
 	&& tar xvf $HTTPD_ARCHIVE -C /opt \
 	&& rm -f $HTTPD_ARCHIVE \
 	&& rm -f $HTTPD_ARCHIVE.sha1 \
-	&& cd /opt/httpd* \
+	&& cd /opt/httpd-$HTTPD_VERSION \
 	&& mkdir /opt/httpd \
 	&& ./configure --prefix=/opt/httpd \
 	&& make \
@@ -55,11 +55,7 @@ RUN \
 	&& yum clean all
 
 ENV PATH /opt/httpd/bin:$PATH
-
-# Data volume
 VOLUME ["/opt/httpd/htdocs"]
-
 EXPOSE 80
-
-COPY entrypoint.sh /
-ENTRYPOINT ["bash", "/entrypoint.sh"]
+COPY entrypoint.sh /usr/bin/
+ENTRYPOINT entrypoint.sh
